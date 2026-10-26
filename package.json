@@ -1,0 +1,46 @@
+{
+  "name": "island-taste",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev --host 127.0.0.1",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "start": "node dist/server/entry.mjs",
+    "check": "tsc --noEmit",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "staff:create": "node --import tsx scripts/create-staff.ts",
+    "staff:demo": "node --import tsx scripts/demo-staff.ts",
+    "test:e2e": "node tests/e2e.cjs",
+    "test:a11y": "node tests/accessibility.cjs",
+    "build:netlify": "NETLIFY=true DATABASE_REQUIRED=true node --import tsx scripts/prepare-hosted.ts && NETLIFY=true ASTRO_TELEMETRY_DISABLED=1 astro build"
+  },
+  "dependencies": {
+    "@astrojs/netlify": "^6.6.5",
+    "@astrojs/node": "^9.5.0",
+    "@astrojs/react": "^4.4.0",
+    "@electric-sql/pglite": "^0.3.14",
+    "@fontsource/instrument-sans": "^5.3.0",
+    "@fontsource/lilita-one": "^5.3.0",
+    "@fontsource/shrikhand": "^5.3.0",
+    "@tailwindcss/vite": "^4.1.0",
+    "astro": "^5.16.0",
+    "pg": "^8.23.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.1.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "playwright": "^1.64.1",
+    "prettier": "^3.9.10",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}
