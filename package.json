@@ -12,7 +12,7 @@
     "staff:demo": "node --import tsx scripts/demo-staff.ts",
     "test:e2e": "node tests/e2e.cjs",
     "test:a11y": "node tests/accessibility.cjs",
-    "build:netlify": "NETLIFY=true DATABASE_REQUIRED=true node --import tsx scripts/prepare-hosted.ts && NETLIFY=true ASTRO_TELEMETRY_DISABLED=1 astro build"
+    "build:netlify": "node scripts/netlify-build.mjs"
   },
   "dependencies": {
     "@astrojs/netlify": "^6.6.5",
