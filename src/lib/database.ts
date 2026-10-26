@@ -10,21 +10,26 @@ export interface SqlDatabase {
 export async function connectDatabase(): Promise<SqlDatabase> {
   const connection =
     process.env.DATABASE_URL || process.env.NETLIFY_DATABASE_URL;
-  if (connection) {
-    const { Pool } = await import("pg");
-    const url = new URL(connection);
-    if (!["postgres:", "postgresql:"].includes(url.protocol))
-      throw Error("A PostgreSQL connection URL is required.");
-    // Preserve certificate verification even when a provider URL includes sslmode=require.
-    for (const key of ["sslmode", "sslcert", "sslkey", "sslrootcert"])
-      url.searchParams.delete(key);
-    const pool = new Pool({
-      connectionString: url.toString(),
-      ssl: { rejectUnauthorized: true },
-      max: 2,
-      idleTimeoutMillis: 10000,
-      connectionTimeoutMillis: 10000,
-    });
+  if (connection || process.env.NETLIFY_DB_URL) {
+    // Let Netlify select the managed driver and deployment database branch.
+    // Explicit PostgreSQL URLs retain their existing TLS-verified connection.
+    const pool = connection
+      ? await (async () => {
+          const { Pool } = await import("pg");
+          const url = new URL(connection);
+          if (!["postgres:", "postgresql:"].includes(url.protocol))
+            throw Error("A PostgreSQL connection URL is required.");
+          for (const key of ["sslmode", "sslcert", "sslkey", "sslrootcert"])
+            url.searchParams.delete(key);
+          return new Pool({
+            connectionString: url.toString(),
+            ssl: { rejectUnauthorized: true },
+            max: 2,
+            idleTimeoutMillis: 10000,
+            connectionTimeoutMillis: 10000,
+          });
+        })()
+      : (await import("@netlify/database")).getDatabase().pool;
     const wrap = (client: any): SqlDatabase => ({
       query: (sql, values) => client.query(sql, values),
       exec: (sql) => client.query(sql),
@@ -32,7 +37,10 @@ export async function connectDatabase(): Promise<SqlDatabase> {
         await client.query("SELECT pg_advisory_xact_lock(hashtext($1))", [key]);
       },
       transaction: async (operation) => {
-        const c = await pool.connect();
+        const c: {
+          query(sql: string, values?: any[]): Promise<any>;
+          release(): void;
+        } = await pool.connect();
         try {
           await c.query("BEGIN");
           const result = await operation(wrap(c));
@@ -55,7 +63,7 @@ export async function connectDatabase(): Promise<SqlDatabase> {
     Boolean(process.env.AWS_LAMBDA_FUNCTION_NAME)
   )
     throw Error(
-      "Configure DATABASE_URL or NETLIFY_DATABASE_URL in Netlify before deploying. Local database fallback is disabled on hosted deployments.",
+      "Enable Netlify Database (NETLIFY_DB_URL) or configure DATABASE_URL / NETLIFY_DATABASE_URL in Netlify before deploying. Local database fallback is disabled on hosted deployments.",
     );
   const { PGlite } = await import("@electric-sql/pglite");
   const directory = resolve(process.env.DATA_DIR || ".data");

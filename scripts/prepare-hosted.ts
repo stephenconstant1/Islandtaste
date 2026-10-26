@@ -1,7 +1,11 @@
 /** Runs on Netlify before building; never prints connection details or passwords. */
 import { db } from "../src/lib/db";
 import { hashPassword } from "../src/lib/auth";
-if (!process.env.DATABASE_URL && !process.env.NETLIFY_DATABASE_URL)
+if (
+  !process.env.DATABASE_URL &&
+  !process.env.NETLIFY_DATABASE_URL &&
+  !process.env.NETLIFY_DB_URL
+)
   throw Error(
     "Set DATABASE_URL (or enable Netlify Database) in Netlify build and function environment settings.",
   );
