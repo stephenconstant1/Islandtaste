@@ -28,7 +28,7 @@ export const db = (globalDb.islandDb ??= (async () => {
         "shrimp",
         "Grilled Shrimp",
         "Meals",
-        1800,
+        2200,
         "shrimp.jpg",
         "Seasoned and grilled with Caribbean flavor.",
       ],

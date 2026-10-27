@@ -317,6 +317,9 @@ export default function Ordering() {
             Visit
           </a>
           <a href="tel:4107149033">(410) 714-9033</a>
+          <a className="btn staff-sign-in" href="/staff">
+            Staff sign in
+          </a>
           <a
             className="btn btn-gold"
             href="/#menu"
