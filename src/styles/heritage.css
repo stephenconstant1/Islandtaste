@@ -59,17 +59,6 @@ button.danger {
 .site-nav a:hover {
   color: var(--gold);
 }
-.site-nav .staff-sign-in {
-  border: 2px solid var(--sand);
-  background: transparent;
-  color: var(--sand);
-  white-space: nowrap;
-}
-.site-nav .staff-sign-in:hover,
-.site-nav .staff-sign-in:focus-visible {
-  border-color: var(--gold);
-  color: var(--gold);
-}
 .site-menu-toggle {
   display: none;
   background: var(--gold);
