@@ -5,7 +5,7 @@ This release publishes the original Island Taste visual design with the new **de
 ## Required account configuration
 
 1. In this cloud environment's secure settings, supply `NETLIFY_AUTH_TOKEN` for the saved requirement. Its allowed HTTPS destination is `api.netlify.com`. Review/save the environment changes and publish the environment configuration so the binding and network access can become available. Do not paste the token into chat or put it in Git. The target site is **islandtaste**, not superlative-lokum-b1e2be.
-2. In the **islandtaste** site's Netlify environment variables, configure a hosted PostgreSQL connection as `DATABASE_URL` (available to **Builds and Functions**). A pooled connection URL is recommended. Alternatively, enable Netlify Database and ensure `NETLIFY_DATABASE_URL` is available to builds and functions. TLS certificate verification stays enabled. The local `.data` database must not be uploaded and cannot be used by serverless functions.
+2. In the **islandtaste** site's Netlify environment variables, configure a hosted PostgreSQL connection as `DATABASE_URL` (available to **Builds and Functions**). A pooled connection URL is recommended. Alternatively, enable Netlify Database; the installed `@netlify/database` package uses its managed `NETLIFY_DB_URL` connection in builds and functions. The legacy `NETLIFY_DATABASE_URL` variable remains supported. TLS certificate verification stays enabled. The local `.data` database must not be uploaded and cannot be used by serverless functions.
 3. In Netlify's build environment only, set `STAFF_USERNAME` and a strong `STAFF_PASSWORD` of at least 12 characters. These create the first hosted staff account. Existing accounts and passwords are preserved on later builds. Remove the bootstrap password from build settings after the first successful deployment if desired. Never use the local demo-access file as a deployment asset.
 4. `netlify.toml` sets the build command to `npm run build:netlify`, the publish directory to `dist`, Node 24, and the intended origin to `https://islandtaste.netlify.app`. These replace the legacy static-root deployment. Additional custom domains require adding their exact origin to the Astro allowed-domain configuration and rebuilding.
 
@@ -26,3 +26,9 @@ After upload, check HTTPS homepage/assets, menu API, staff authentication, one c
 ## Current blocker
 
 Netlify authorization and the hosted database configuration are not available to this task yet. No deployment ID or successful live-site verification has been produced. Once the secure settings are supplied, resume by verifying the Netlify account/site and database readiness, then build, publish, and verify the live release.
+
+## Missing database connection during build
+
+The build and runtime accept `DATABASE_URL`, legacy `NETLIFY_DATABASE_URL`, or the managed Netlify Database connection `NETLIFY_DB_URL`. Managed connections use `@netlify/database` to select the platform driver. A missing connection still stops deployment and never falls back to local storage on Netlify. Build diagnostics report presence only and redact connection strings from subprocess output.
+
+If all three connections are absent after deploying this change, confirm Netlify Database is enabled for this project and available to the build context, or configure an external PostgreSQL `DATABASE_URL` for both Builds and Functions. Then retry the deploy.

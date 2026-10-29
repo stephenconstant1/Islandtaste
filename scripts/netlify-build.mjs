@@ -13,6 +13,7 @@ const environment = {
 const secretValues = [
   "DATABASE_URL",
   "NETLIFY_DATABASE_URL",
+  "NETLIFY_DB_URL",
   "STAFF_PASSWORD",
   "NETLIFY_AUTH_TOKEN",
 ]
@@ -52,6 +53,7 @@ console.log(
 for (const name of [
   "DATABASE_URL",
   "NETLIFY_DATABASE_URL",
+  "NETLIFY_DB_URL",
   "STAFF_USERNAME",
   "STAFF_PASSWORD",
 ]) {
@@ -59,9 +61,13 @@ for (const name of [
     `[Island Taste] ${name}: ${environment[name] ? "present" : "not configured"} (value hidden).`,
   );
 }
-if (!environment.DATABASE_URL && !environment.NETLIFY_DATABASE_URL) {
+if (
+  !environment.DATABASE_URL &&
+  !environment.NETLIFY_DATABASE_URL &&
+  !environment.NETLIFY_DB_URL
+) {
   console.error(
-    "[Island Taste] STOP: No hosted database connection is available to this build. Configure DATABASE_URL for Builds and Functions, or make the managed NETLIFY_DATABASE_URL available to both scopes.",
+    "[Island Taste] STOP: No hosted database connection is available to this build. Configure DATABASE_URL for Builds and Functions, or enable Netlify Database so NETLIFY_DB_URL is available to both scopes.",
   );
   process.exit(1);
 }
