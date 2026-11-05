@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import Breadcrumb from "./Breadcrumb";
 import { api, money, type Item } from "./shared";
 const statuses = [
   "New Orders",
@@ -106,6 +107,10 @@ export default function Staff() {
         </a>
         <a href="/">← Customer menu</a>
       </header>
+      <Breadcrumb
+        section={user ? (kitchen ? "Kitchen view" : tab) : "Staff sign in"}
+        parent={user ? { label: "Staff", href: "/staff" } : undefined}
+      />
       {checking ? (
         <p className="wrap" role="status">
           Checking your session…

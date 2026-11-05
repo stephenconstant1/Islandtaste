@@ -7,6 +7,7 @@ import {
   FooterWave,
 } from "./Heritage";
 import React, { useEffect, useRef, useState } from "react";
+import Breadcrumb from "./Breadcrumb";
 import { api, money, type Item, type CartLine } from "./shared";
 function Modal({
   title,
@@ -92,6 +93,13 @@ export default function Ordering() {
     [order, setOrder] = useState<any>(null);
   const [notes, setNotes] = useState("");
   const [navOpen, setNavOpen] = useState(false);
+  const [sectionHash, setSectionHash] = useState("");
+  useEffect(() => {
+    const syncSection = () => setSectionHash(window.location.hash);
+    syncSection();
+    window.addEventListener("hashchange", syncSection);
+    return () => window.removeEventListener("hashchange", syncSection);
+  }, []);
   const key = useRef("");
   useEffect(() => {
     api("menu")
@@ -326,6 +334,14 @@ export default function Ordering() {
           </a>
         </nav>
       </header>
+      <Breadcrumb
+        section={
+          view === "checkout" ? "Checkout" :
+          view === "confirmation" ? "Order confirmation" :
+          sectionHash === "#mission" ? "Our Mission" :
+          sectionHash === "#visit" ? "Visit" : "Menu"
+        }
+      />
       <main id="main">
         {error && (
           <div className="wrap">

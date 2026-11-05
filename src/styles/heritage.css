@@ -59,6 +59,31 @@ button.danger {
 .site-nav a:hover {
   color: var(--gold);
 }
+.section-breadcrumb {
+  padding-top: 16px;
+  padding-bottom: 16px;
+  font-size: 14px;
+  color: var(--deep);
+}
+.section-breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.section-breadcrumb li + li::before {
+  content: "/";
+  margin-right: 8px;
+}
+.section-breadcrumb a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+.section-breadcrumb [aria-current="page"] {
+  font-weight: 600;
+}
 .site-menu-toggle {
   display: none;
   background: var(--gold);
